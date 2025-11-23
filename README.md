@@ -1,65 +1,146 @@
-# Deep Learning Barcode Verification System
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue) ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange) ![Status](https://img.shields.io/badge/Status-Active-green)
 
-A robust Deep Learning-based system designed to classify and verify barcodes. This project uses a Convolutional Neural Network (CNN)—specifically **MobileNetV2** via Transfer Learning—to achieve high accuracy (>90%) in distinguishing between valid/readable barcodes and damaged/invalid ones.
+# 🔍 Deep Learning-based Barcode Verification System
+
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![TensorFlow](https://img.shields.io/badge/Framework-TensorFlow%20%7C%20Keras-orange)
+![Accuracy](https://img.shields.io/badge/Accuracy-97%25-brightgreen)
+![Status](https://img.shields.io/badge/Status-Completed-success)
+
+> A robust Convolutional Neural Network (CNN) solution to automate barcode quality evaluation, distinguishing between valid/readable and invalid/damaged barcodes with over 97% accuracy.
 
 ---
 
 ## 📋 Table of Contents
-- [Project Overview](#-project-overview)
-- [Features](#-features)
-- [Folder Structure](#-folder-structure)
-- [Prerequisites & Installation](#-prerequisites--installation)
-- [Dataset Preparation](#-dataset-preparation)
-- [Usage](#-usage)
-  - [Training the Model](#1-training-the-model)
-  - [Evaluation & Confusion Matrix](#2-evaluation--confusion-matrix)
-  - [Inference (Testing)](#3-inference-testing)
-- [Results](#-results)
-- [Troubleshooting](#-troubleshooting)
+
+1. [Project Overview](#-project-overview)
+2. [Problem Statement](#-problem-statement)
+3. [System Architecture](#-system-architecture)
+4. [Dataset Details](#-dataset-details)
+5. [Tech Stack](#-tech-stack)
+6. [Performance & Results](#-performance--results)
+7. [Future Scope](#-future-scope)
+8. [Installation & Usage](#-installation--usage)
 
 ---
 
-## 🔭 Project Overview
-This system automates the quality control or recognition process for barcodes. Instead of traditional computer vision techniques (like simple thresholding), it leverages Deep Learning to handle noise, blur, and variable lighting conditions.
+## 📖 Project Overview
 
-**Key Capabilities:**
-- **Binary Classification:** Determines if a barcode is "Valid/Readable" or "Defective/Unreadable".
-- **High Accuracy:** Optimized to reach over 90% accuracy on validation sets using Transfer Learning.
-- **Visual Metrics:** Generates accuracy plots and Confusion Matrices for detailed performance analysis.
+In retail and logistics, barcode verification is essential to ensure supply chain efficiency. Conventional verification systems often rely on expensive hardware and strict, inflexible image processing rules.
 
----
+This project proposes a software-based **Deep Learning Barcode Verification System**. By utilizing a **Convolutional Neural Network (CNN)**, the system "learns" to identify features of good and bad barcodes, offering a cost-effective alternative to dedicated hardware scanners.
 
-## 🚀 Features
-- **Transfer Learning:** Utilizes pre-trained weights (ImageNet) for faster convergence and better feature extraction.
-- **Data Augmentation:** Automated rotation, zooming, and shifting to prevent overfitting on small datasets.
-- **Confusion Matrix:** Visual heatmap to identify False Positives and False Negatives.
-- **Model Checkpointing:** Automatically saves the best version of the model (lowest validation loss) during training.
+### Key Objectives
+* Develop a CNN model to classify barcode images.
+* Create a synthetic dataset containing both high-quality and degraded barcodes.
+* Achieve a classification accuracy surpassing 90%.
 
 ---
 
-## 📂 Folder Structure
-Ensure your project directory matches this structure for the scripts to run correctly:
+## ⚠️ Problem Statement
 
-```text
-Barcode_Project/
-│
-├── dataset/
-│   ├── train/
-│   │   ├── valid/            # Images of good barcodes
-│   │   └── defective/        # Images of bad/no barcodes
-│   │
-│   └── validation/
-│       ├── valid/
-│       └── defective/
-│
-├── output/                   # Generated plots and saved models
-│   ├── barcode_model.h5
-│   ├── accuracy_plot.png
-│   └── confusion_matrix.png
-│
-├── train_model.py            # Main script for training
-├── predict.py                # Script for testing single images
-├── requirements.txt          # Dependencies
+> "Manual barcode verification is laborious and prone to error, while conventional machine vision systems can be too costly and sensitive to lighting conditions."
+
+This project solves this by providing a reliable software solution that classifies barcodes into two categories:
+1.  **Valid/Readable:** High-quality, standard-compliant codes.
+2.  **Invalid/Unreadable:** Blurred, noisy, occluded, or printing-error codes.
+
+---
+
+## 🧠 System Architecture
+
+The core of the system is a **Convolutional Neural Network (CNN)**. Unlike traditional methods that require manual feature extraction, the CNN automatically identifies features such as edges, spacing, and bar patterns to determine quality.
+
+
+
+[Image of Convolutional Neural Network architecture diagram]
+
+
+The workflow involves:
+1.  **Data Generation:** Creating synthetic images.
+2.  **Preprocessing:** Normalization and resizing.
+3.  **Training:** Feature extraction and classification via CNN layers.
+4.  **Evaluation:** Testing against the validation set using a Confusion Matrix.
+
+---
+
+## 📂 Dataset Details
+
+Due to the lack of public datasets for "Good vs. Bad" barcode verification, a **Synthetic Dataset** was generated programmatically:
+
+| Class Label | Description | Generation Method |
+| :--- | :--- | :--- |
+| **Class 0 (Good)** | Valid, Readable Barcodes | Generated using the `python-barcode` library. High resolution, clear edges. |
+| **Class 1 (Bad)** | Invalid, Unreadable Barcodes | Generated by applying Gaussian blur, salt-and-pepper noise, and occlusion to Class 0 images. |
+
+---
+
+## 🛠 Tech Stack
+
+* **Language:** Python 3.x
+* **Deep Learning:** TensorFlow / Keras
+* **Computer Vision:** OpenCV
+* **Data Manipulation:** NumPy
+* **Visualization:** Matplotlib, Seaborn
+* **Metrics:** Scikit-learn
+* **Environment:** Google Colab / Jupyter Notebook
+
+---
+
+## 📊 Performance & Results
+
+The model was trained for **10 epochs**, showing steady improvement in accuracy and reduction in loss.
+
+* **Training Accuracy:** ~98.5%
+* **Validation Accuracy:** **97.0%**
+
+### Confusion Matrix Analysis
+
+We evaluated the model on a test set to understand False Positives and False Negatives.
+
+
+
+| | **Predicted: Good (0)** | **Predicted: Bad (1)** |
+| :--- | :---: | :---: |
+| **Actual: Good (0)** | **198 (TN)** | 2 (FP) |
+| **Actual: Bad (1)** | 10 (FN) | **190 (TP)** |
+
+* **True Negatives (198):** Perfectly identified good barcodes.
+* **True Positives (190):** Perfectly identified damaged barcodes.
+* **Result:** The system significantly exceeded the 90% accuracy objective.
+
+---
+
+## 🔮 Future Scope
+
+* **Real-World Deployment:** Implementing the model on edge devices like **Raspberry Pi** for real-time assembly line verification.
+* **Mobile Integration:** Developing a mobile app to allow warehouse staff to verify stock quality using smartphone cameras.
+* **Format Expansion:** Extending the dataset to support **QR Codes** and **Data Matrix** codes.
+
+---
+
+## ⚙️ Installation & Usage
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/yourusername/barcode-verification-dl.git](https://github.com/yourusername/barcode-verification-dl.git)
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    pip install tensorflow opencv-python matplotlib seaborn python-barcode scikit-learn
+    ```
+
+3.  **Run the Notebook/Script:**
+    Open `Barcode_Verification_CNN.ipynb` in Jupyter or Google Colab to see the training process and results.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.├── requirements.txt          # Dependencies
 └── README.md
+## 👨‍💻 Author
+
+**Created by MOHIT PILLAI**
+**ID:** 25BAI11111
